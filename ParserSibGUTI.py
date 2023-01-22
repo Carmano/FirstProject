@@ -6,6 +6,16 @@ URL_TEMPLATE = 'https://sibsutis.ru/students/study/Расписание%20очн
 DOMAIN = 'https://sibsutis.ru'
 
 
+def get_categories(href):
+    return href.lstrip('https://sibsutis.ru/students/study/').split('/')
+
+
+def download(df):
+    for filename, url in zip(df['name'], df['url_downoloads']):
+        r = requests.get(url)
+        open(f'files/{filename}', 'wb').write(r.content)
+
+
 def parser(url=URL_TEMPLATE):
     result_list = {'name': [], 'url_downoloads': []}
     html = requests.get(url)
@@ -24,14 +34,3 @@ def parser(url=URL_TEMPLATE):
             result_list['url_downoloads'].extend(res['url_downoloads'])
             # result_list['categories'].extend(res['categories'])
     return result_list
-
-
-def get_categories(href):
-    return href.lstrip('https://sibsutis.ru/students/study/').split('/')
-
-
-def download(df):
-    for filename, url in zip(df['name'], df['url_downoloads']):
-        r = requests.get(url)
-        open(f'files/{filename}', 'wb').write(r.content)
-
